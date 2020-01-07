@@ -12,7 +12,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use(require('./routes/usuario.js'));
+//Configuracion de las rutas
+app.use(require('./routes/index.js'));
 
 //await 
 console.log(process.env.URLDB);

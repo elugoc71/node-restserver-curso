@@ -2,9 +2,17 @@ const express = require('express');
 const Usuario = require('../models/usuario.js');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
+const { verificaToken } = require('../mddlewares/autenticacion.js');
+const { verificaAdmin_Role } = require('../mddlewares/autenticacion.js');
 const app = express();
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, function(req, res) {
+
+    return res.json({
+        usuario: req.usuario,
+        nombre: req.usuario.nombre,
+        email: req.usuario.email,
+    })
 
     let desde = Number(req.query.desde) || 0;
     let limite = Number(req.query.limite) || 5;
@@ -21,7 +29,7 @@ app.get('/usuario', function(req, res) {
             });
         }
 
-        Usuario.count({ estado: true }, (err, conteo) => {
+        Usuario.countDocuments({ estado: true }, (err, conteo) => {
             res.json({
                 ok: true,
                 usuarios: usuarios,
@@ -36,9 +44,18 @@ app.get('/usuario', function(req, res) {
 
 });
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificaToken, verificaAdmin_Role], function(req, res) {
+
+
+    //eturn res.json({
+    //  usuario: req.usuario,
+    // nombre: req.usuario.nombre,
+    //email: req.usuario.email,
+    //})
 
     let body = req.body;
+
+    console.log(body.password);
 
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -46,6 +63,8 @@ app.post('/usuario', function(req, res) {
         password: bcrypt.hashSync(body.password, 10),
         role: body.role
     });
+
+    console.log(usuario.password);
 
     usuario.save((err, usuarioDB) => {
 
@@ -68,7 +87,7 @@ app.post('/usuario', function(req, res) {
 
 })
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre',
         'email',
@@ -96,7 +115,7 @@ app.put('/usuario/:id', function(req, res) {
 
 })
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
     let id = req.params.id;
 
     let CambiaEstado = {
