@@ -15,12 +15,18 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 //60 minutos
 //24 horas
 //30 dias
-process.env.CADUCIDAD_TOKEN = 60 * 60 * 24 * 30;
+process.env.CADUCIDAD_TOKEN = '48h';
 
 //******************************** */
 //SEED DE AUTENTICACION
 //**************************************** */
 process.env.SEED = process.env.SEED || 'este es el seed de desarrollo';
+
+//******************************** */
+//CLIENT ID
+//**************************************** */
+process.env.CLIENT_ID = process.env.CLIENT_ID || '537422196363-8jahuu34e7sgviph1ou87fs9ctp0knl2.apps.googleusercontent.com';
+
 
 /********* */
 /*Base de datos*****/

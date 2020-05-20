@@ -2,17 +2,17 @@ const express = require('express');
 const Usuario = require('../models/usuario.js');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
-const { verificaToken } = require('../mddlewares/autenticacion.js');
-const { verificaAdmin_Role } = require('../mddlewares/autenticacion.js');
+const { verificaToken } = require('../middlewares/autenticacion.js');
+const { verificaAdmin_Role } = require('../middlewares/autenticacion.js');
 const app = express();
 
 app.get('/usuario', verificaToken, function(req, res) {
 
-    return res.json({
+    /*return res.json({ //solo devuelve el usuario autenticado
         usuario: req.usuario,
         nombre: req.usuario.nombre,
         email: req.usuario.email,
-    })
+    })*/
 
     let desde = Number(req.query.desde) || 0;
     let limite = Number(req.query.limite) || 5;
@@ -29,7 +29,7 @@ app.get('/usuario', verificaToken, function(req, res) {
             });
         }
 
-        Usuario.countDocuments({ estado: true }, (err, conteo) => {
+        Usuario.countDocuments({ estado: true }, (err, conteo) => { //Coleccion en mongoose que se utiliza para contar en una db
             res.json({
                 ok: true,
                 usuarios: usuarios,
